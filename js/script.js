@@ -3,6 +3,8 @@ const username = "thad-rankin";
 const repoList = document.querySelector(".repo-list");
 const repoContainers = document.querySelector(".repos");
 const repoData = document.querySelector(".repo-data");
+const backToGallery = document.querySelector(".view-repos");
+const filterInput = document.querySelector(".filter-repos");
 
 const fetchGitHubUser = async function () {
   const userInfo = await fetch(`https://api.github.com/users/${username}`);
@@ -37,6 +39,7 @@ const gitRepos = async function () {
 };
 
 const displayRepos = function (repos) {
+  filterInput.classList.remove("hide");
   for (const repo of repos) {
     const repoItem = document.createElement("li");
     repoItem.classList.add("repo");
@@ -69,6 +72,7 @@ const getRepoInfo = async function (repoName) {
 };
 
 const displayRepoInfo = function (repoInfo, languages) {
+  backToGallery.classList.remove("hide");
   repoData.innerHTML = "";
   repoData.classList.remove("hide");
   repoContainers.classList.add("hide");
@@ -82,3 +86,24 @@ const displayRepoInfo = function (repoInfo, languages) {
   `;
   repoData.append(div);
 };
+
+backToGallery.addEventListener("click", function () {
+  repoContainers.classList.remove("hide");
+  repoData.classList.add("hide");
+  backToGallery.classList.add("hide");
+});
+
+filterInput.addEventListener("input", function (e) {
+  const searchText = e.target.value;
+  const repos = document.querySelectorAll(".repo");
+  const lowerCaseSearch = searchText.toLowerCase();
+
+  for (const repo of repos) {
+    const lowerCaseRepo = repo.innerText.toLowerCase();
+  if (lowerCaseRepo.includes(lowerCaseSearch)) {
+    repo.classList.remove("hide");
+  } else {
+    repo.classList.add("hide");
+  }
+}
+});
